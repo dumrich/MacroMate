@@ -1,8 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 import models
-from models import User, SessionLocal
+from models import SessionLocal, DiningHall, Menu, Food, Allergen, DietaryRestriction
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -15,56 +14,72 @@ def get_db():
     finally:
         db.close()
 
-# Create a simple User model for input
-class User(BaseModel):
-    name: str
-    email: str
-    age: int
+#End points
 
-# Create a user in the database
-@app.post("/users/", response_model=dict)
-def create_user(user: User, db: Session = Depends(get_db)):
-    db_user = User(**user.model_dump())
-    db.add(db_user)
+@app.post("/dining_halls/")
+def create_dining_hall(name: str, db: Session = Depends(get_db)):
+    new_hall = DiningHall(name=name)
+    db.add(new_hall)
     db.commit()
-    db.refresh(db_user)
-    return {"message": "User created successfully", "user": db_user}
+    db.refresh(new_hall)
+    return new_hall
 
-# Read all users from the database
-@app.get("/users/")
-def read_users(db: Session = Depends(get_db)):
-    users = db.query(User).all()
-    return users
+@app.get("/dining_halls/")
+def get_dining_halls(db: Session = Depends(get_db)):
+    return db.query(DiningHall).all()
 
-# Read a single user by ID
-@app.get("/users/{user_id}")
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-# Update a user
-@app.put("/users/{user_id}")
-def update_user(user_id: int, user: User, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.id == user_id).first()
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    db_user.name = user.name
-    db_user.email = user.email
-    db_user.age = user.age
+@app.post("/menus/")
+def create_menu(menu_type: str, dining_hall_id: int, db: Session = Depends(get_db)):
+    new_menu = Menu(menu_type=menu_type, dining_hall_id=dining_hall_id)
+    db.add(new_menu)
     db.commit()
-    db.refresh(db_user)
-    return {"message": "User updated successfully", "user": db_user}
+    db.refresh(new_menu)
+    return new_menu
 
-# Delete a user by ID
-@app.delete("/users/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.id == user_id).first()
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    db.delete(db_user)
+@app.get("/dining_halls/{dining_hall_id}/menus")
+def get_menus_for_dining_hall(dining_hall_id: int, db: Session = Depends(get_db)):
+    return db.query(Menu).filter(Menu.dining_hall_id == dining_hall_id).all()
+
+@app.post("/foods/")
+def create_food(name: str, calories: int, proteins: float, fats: float, sugars: float, menu_id: int, db: Session = Depends(get_db)):
+    new_food = Food(name=name, calories=calories, proteins=proteins, fats=fats, sugars=sugars, menu_id=menu_id)
+    db.add(new_food)
     db.commit()
-    return {"message": "User deleted successfully"}
+    db.refresh(new_food)
+    return new_food
+
+@app.get("/menus/{menu_id}/foods")
+def get_foods_for_menu(menu_id: int, db: Session = Depends(get_db)):
+    return db.query(Food).filter(Food.menu_id == menu_id).all()
+
+@app.post("/allergens/")
+def create_allergen(name: str, db: Session = Depends(get_db)):
+    new_allergen = Allergen(name=name)
+    db.add(new_allergen)
+    db.commit()
+    db.refresh(new_allergen)
+    return new_allergen
+
+@app.post("/foods/{food_id}/add_allergen/{allergen_id}")
+def add_allergen_to_food(food_id: int, allergen_id: int, db: Session = Depends(get_db)):
+    food_item = db.query(Food).filter(Food.id == food_id).first()
+    allergen = db.query(Allergen).filter(Allergen.id == allergen_id).first()
+    food_item.allergens.append(allergen)
+    db.commit()
+    return {"message": f"Allergen {allergen.name} added to food {food_item.name}"}
+
+@app.post("/dietary_restrictions/")
+def create_dietary_restriction(restriction: str, db: Session = Depends(get_db)):
+    new_restriction = DietaryRestriction(restriction=restriction)
+    db.add(new_restriction)
+    db.commit()
+    db.refresh(new_restriction)
+    return new_restriction
+
+@app.post("/foods/{food_id}/add_dietary_restriction/{dietary_id}")
+def add_dietary_restriction_to_food(food_id: int, dietary_id: int, db: Session = Depends(get_db)):
+    food_item = db.query(Food).filter(Food.id == food_id).first()
+    dietary_restriction = db.query(DietaryRestriction).filter(DietaryRestriction.id == dietary_id).first()
+    food_item.dietary_restrictions.append(dietary_restriction)
+    db.commit()
+    return {"message": f"Dietary restriction {dietary_restriction.restriction} added to food {food_item.name}"}

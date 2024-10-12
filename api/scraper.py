@@ -32,5 +32,5 @@ for hall in dining_halls:
         response_data[hall] = [] 
         response_data[hall].append(soup)
         
-print(response_data)
+print()
 

@@ -68,7 +68,7 @@ class Food(Base):
     menu = relationship("Menu", back_populates="foods")
 
 class Allergen(Base):
-    __tablebame__ = 'allergens'
+    __tablename__ = 'allergens'
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)  # e.g., "Milk", "Eggs", "Peanuts"
@@ -77,7 +77,7 @@ class Allergen(Base):
     foods = relationship("Food", secondary=food_allergen_association, back_populates="allergens")
 
 class DietaryRestriction(Base):
-    __tablebame__ = 'dietary_restrictions'
+    __tablename__ = 'dietary_restrictions'
 
     id = Column(Integer, primary_key=True, index=True)
     restriction = Column(String, unique=True, nullable=False)  # e.g., "Gluten friendly", "Halal Friendly"

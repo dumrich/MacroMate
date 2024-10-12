@@ -24,7 +24,7 @@ class User(BaseModel):
 # Create a user in the database
 @app.post("/users/", response_model=dict)
 def create_user(user: User, db: Session = Depends(get_db)):
-    db_user = User(name=user.name, email=user.email, age=user.age)
+    db_user = User(**user.model_dump())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -32,8 +32,8 @@ def create_user(user: User, db: Session = Depends(get_db)):
 
 # Read all users from the database
 @app.get("/users/")
-def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    users = db.query(User).offset(skip).limit(limit).all()
+def read_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
     return users
 
 # Read a single user by ID

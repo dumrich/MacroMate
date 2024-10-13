@@ -1,35 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/user_input_state.dart';
 
-class UserInputScreen extends StatefulWidget {
+class UserInputScreen extends StatelessWidget {
   const UserInputScreen({super.key});
 
   @override
-  State<UserInputScreen> createState() => _UserInputScreenState();
-}
-
-class _UserInputScreenState extends State<UserInputScreen> {
-  // List of available goals
-  final List<String> _genders = ['Male', 'Female'];
-  final List<String> _activityLevels = ['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active', 'Super Activate'];
-  final List<String> _goals = ['Maintain', 'Bulk', 'Cut'];
-  final List<String> _timeFrames = ['Short (1-2 months)', 'Medium (3-5 months)', 'Long (6+ months)'];
-
-  // Variables for age, height, weight
-  double _age = 25; //Defualt age
-  double _height = 70; // Default height in in
-  double _weight = 150;  // Default weight in pounds
-
-  // Variables to store dropdowns
-  String _selectedGender = 'Male';
-  String _selectedActivityLevel = 'Sedentary';
-  String _selectedGoal = 'Lose Weight';
-  String _selectedTimeFrame = 'Short (1-2 months)';
-
-  @override
   Widget build(BuildContext context) {
+    var userInputState = Provider.of<UserInputState>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Adjust Height, Weight & Goals'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Go back to Home Screen
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -37,49 +25,43 @@ class _UserInputScreenState extends State<UserInputScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Age Slider
-            Text('Age: ${_age.toInt()} years old', style: const TextStyle(fontSize: 16)),
+            Text('Age: ${userInputState.age.toInt()} years old', style: const TextStyle(fontSize: 16)),
             Slider(
-              value: _age,
+              value: userInputState.age,
               min: 1, // Minimum age
               max: 99, // Maximum age
               divisions: 98, // Number of steps
-              label: _age.toInt().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _age = value;
-                });
+              label: userInputState.age.toInt().toString(),
+              onChanged: (double age) {
+                userInputState.setAge(age);
               },
             ),
 
             // Height Slider
-            Text('Height: ${_height.toInt()} inches', style: const TextStyle(fontSize: 16)),
+            Text('Height: ${userInputState.height.toInt()} inches', style: const TextStyle(fontSize: 16)),
             Slider(
-              value: _height,
+              value: userInputState.height,
               min: 20, // Minimum height in inches
               max: 100, // Maximum height in inches
               divisions: 80, // Number of steps
-              label: _height.toInt().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _height = value;
-                });
+              label: userInputState.height.toInt().toString(),
+              onChanged: (double height) {
+                userInputState.setHeight(height);
               },
             ),
 
             const SizedBox(height: 16),
 
             //Weight Slider
-            Text('Weight: ${_weight.toInt()} pounds', style: const TextStyle(fontSize: 16)),
+            Text('Weight: ${userInputState.weight.toInt()} pounds', style: const TextStyle(fontSize: 16)),
             Slider(
-              value: _weight,
+              value: userInputState.weight,
               min: 30, // Minimum height in pounds
               max: 400, // Maximum height in pounds
               divisions: 370, // Number of steps
-              label: _weight.toInt().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _weight = value;
-                });
+              label: userInputState.weight.toInt().toString(),
+              onChanged: (double weight) {
+                userInputState.setWeight(weight);
               },
             ),
             
@@ -102,17 +84,15 @@ class _UserInputScreenState extends State<UserInputScreen> {
                 Expanded(
                   flex: 6,
                   child: DropdownButton<String>(
-                    value: _selectedGender,
-                    items: _genders.map((String gender) {
+                    value: userInputState.selectedGender,
+                    items: userInputState.genders.map((String gender) {
                       return DropdownMenuItem<String>(
                         value: gender,
                         child: Text(gender),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGender = newValue!;
-                      });
+                    onChanged: (String? gender) {
+                      userInputState.setGender(gender!);
                     },
                   ),
                 ),
@@ -137,17 +117,15 @@ class _UserInputScreenState extends State<UserInputScreen> {
                 Expanded(
                   flex: 6,
                   child: DropdownButton<String>(
-                    value: _selectedActivityLevel,
-                    items: _activityLevels.map((String activityLevel) {
+                    value: userInputState.selectedActivityLevel,
+                    items: userInputState.activityLevels.map((String activityLevel) {
                       return DropdownMenuItem<String>(
                         value: activityLevel,
                         child: Text(activityLevel),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedActivityLevel = newValue!;
-                      });
+                    onChanged: (String? activityLevel) {
+                      userInputState.setActivityLevel(activityLevel!);
                     },
                   ),
                 ),
@@ -172,17 +150,15 @@ class _UserInputScreenState extends State<UserInputScreen> {
                 Expanded(
                   flex: 6,
                   child: DropdownButton<String>(
-                    value: _selectedGoal,
-                    items: _goals.map((String goal) {
+                    value: userInputState.selectedGoal,
+                    items: userInputState.goals.map((String goal) {
                       return DropdownMenuItem<String>(
                         value: goal,
                         child: Text(goal),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGoal = newValue!;
-                      });
+                    onChanged: (String? goal) {
+                      userInputState.setGoal(goal!);
                     },
                   ),
                 ),
@@ -207,17 +183,15 @@ class _UserInputScreenState extends State<UserInputScreen> {
                 Expanded(
                   flex: 6,
                   child: DropdownButton<String>(
-                    value: _selectedTimeFrame,
-                    items: _timeFrames.map((String timeFrame) {
+                    value: userInputState.selectedTimeFrame,
+                    items: userInputState.timeFrames.map((String timeFrame) {
                       return DropdownMenuItem<String>(
                         value: timeFrame,
                         child: Text(timeFrame),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedTimeFrame = newValue!;
-                      });
+                    onChanged: (String? timeFrame) {
+                      userInputState.setTimeFrame(timeFrame!);
                     },
                   ),
                 ),

@@ -1,12 +1,8 @@
 from sqlalchemy.orm import Session
 import models
 from models import SessionLocal, DiningHall, Menu, Food, Allergen, DietaryRestriction
-from fastapi import FastAPI, Request,Depends, HTTPException
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-import models
-from models import User, SessionLocal
-import openai
+from fastapi import FastAPI, Request, Depends
+import openai, os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,6 +42,36 @@ def create_menu(menu_type: str, dining_hall_id: int, db: Session = Depends(get_d
 @app.get("/dining_halls/{dining_hall_id}/menus")
 def get_menus_for_dining_hall(dining_hall_id: int, db: Session = Depends(get_db)):
     return db.query(Menu).filter(Menu.dining_hall_id == dining_hall_id).all()
+
+@app.delete('/dining_halls/{dining_hall_id}')
+def delete_menu(dining_hall_id: int, db: Session = Depends(get_db)):
+    #Query by ID
+    dining_hall = db.query(DiningHall).filter(DiningHall.id == dining_hall_id).first()
+
+    # Check if the dining hall exists
+    if not dining_hall:
+        return {"error": "Dining Hall not found"}
+    
+    for menu in dining_hall.menus:
+       db.delete(menu)
+       
+    db.commit()
+
+    return {"message": f"Menus from Dining Hall Id {dining_hall_id} has been deleted, along with its associated food items."}
+
+@app.delete('/menus/{menu_id}')
+def delete_menu(menu_id: int, db: Session = Depends(get_db)):
+    #Query by ID
+    menu = db.query(Menu).filter(Menu.id == menu_id).first()
+
+    # Check if the menu exists
+    if not menu:
+        return {"error": "Menu not found"}
+    
+    db.delete(menu)
+    db.commit()
+
+    return {"message": f"Menu with ID {menu_id} has been deleted, along with its associated food items."}
 
 @app.post("/foods/")
 def create_food(name: str, calories: int, proteins: float, fats: float, sugars: float, menu_id: int, db: Session = Depends(get_db)):
@@ -172,7 +198,7 @@ def get_dining_hall_food_menus_JSON(dining_hall_id: int, db: Session = Depends(g
 
     return formatted_json
 
-#Helper method for converting Menu models into full menu
+#Helper method for converting Menu models into full menu ----------------------------------------
 def menu_as_json(menu: Menu):
 
     formatted_json = {menu.menu_type: []}

@@ -226,13 +226,21 @@ def gen_diet(spec):
     # Pie chart for macronutrient breakdown
     labels = ['Carbohydrates', 'Proteins', 'Fats']
     sizes = [default_carbs_g, default_proteins_g, default_fats_g]
-    colors = ['#FF9999', '#66B2FF', '#99FF99']
+    colors = ['#FF9999', '#66B2FF', '#1CAC78']
     explode = (0.1, 0, 0)  # Explode the carbs slice slightly
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(2, 2))
+
+    # Set both figure and axes background color
+    fig.patch.set_facecolor('#0e1117')  # Set figure background color
+    ax.set_facecolor('#0e1117')  # Set background color for the axes
+
+    label_color = 'white'
+    font_size = 10  # Set your desired font size
+
     ax.pie(sizes, explode=explode, labels=labels, colors=colors, startangle=90, 
-            autopct=lambda p: f'{int(p / 100 * sum(sizes))} g' if p > 0 else '')
-    ax.axis('equal')  # Ensure pie chart is drawn as a circle
+        autopct=lambda p: f'{int(p / 100 * sum(sizes))} g' if p > 0 else '',
+        textprops={'color': label_color, 'fontsize': font_size})
 
     st.pyplot(fig)
 

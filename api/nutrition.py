@@ -43,6 +43,11 @@ for b_tag in b_tags:
     elif 'Protein' in b_tag.text:
         nutrition_facts['Protein'] = b_tag.next_sibling.strip()
 
+data = {}
 #Print the extracted data
 for key, value in nutrition_facts.items():
-    print(f"{key}: {value}")
+    data[key] = value
+    
+print(data)
+    
+

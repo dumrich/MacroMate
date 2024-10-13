@@ -92,8 +92,7 @@ def add_dietary_restriction_to_food(food_id: int, dietary_id: int, db: Session =
     return {"message": f"Dietary restriction {dietary_restriction.restriction} added to food {food_item.name}"}
 
 def query(menu, macros, restrictions, query):
-    response = openai.chat.completion.create(model="gpt-4o", temperature=0.9, top_p=0.3
-                                          messages=[
+    response = openai.chat.completion.create(model="gpt-4o", temperature=0.9, top_p=0.3, messages=[
     {
       "role": "system",
       "content": f"From the following menu items (with nutrition included), list the items that I should have for breakfast, lunch, and dinner. Menu: {menu}. These are my macros: {macros}. These are my dietary restrictions: {diet}"
@@ -110,7 +109,7 @@ def query(menu, macros, restrictions, query):
     return response.choices[0].message.content
 
 @app.post("/query/")
-def user_query(request: Request):
+async def user_query(request: Request):
     input = await request.json()
     
     query = data.get("name")

@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models
 from models import SessionLocal, DiningHall, Menu, Food, Allergen, DietaryRestriction
-=======
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request,Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 import models

@@ -133,22 +133,17 @@ restrictions = {
 
 API_URL = "http://104.39.68.161:8000/query/"
 
-
-user_input = st.text_input("You:", "")
-
+# Function to query the API
 def query_llm_api(user_input):
-    headers = {
-        "Content-Type": "application/json"
-    }
+    headers = {"Content-Type": "application/json"}
     data = {
         "query": user_input,
-        "menu_id": diningHall,
-        "macros": get_nutrients(),
+        "menu_id": diningHall,  # Placeholder variable, replace with real value if needed
+        "macros": get_nutrients(),  # Placeholder function, replace with real logic
         "restrictions": restrictions,
-
     }
     print(data)
-    
+
     try:
         response = requests.post(API_URL, json=data, headers=headers)
         response.raise_for_status()  # Raise an error for bad responses
@@ -156,61 +151,98 @@ def query_llm_api(user_input):
     except requests.exceptions.RequestException as e:
         return f"Error: {str(e)}"
 
+
+user_input = None
+# Function to handle conversation flow
 def make_query(query):
-    
-    # Check if total calories are exceeded
+    # Initialize conversation history if not already present
     if "conversation" not in st.session_state:
         st.session_state["conversation"] = []
-        
-    # LLM Response
+
+    # Get response from the API
     llm_response = query_llm_api(query)
-    
-    # Add the LLM's response to the conversation history
+
+    # Append user and bot messages to conversation history
+    st.session_state["conversation"].append(f"You: {query}")
     st.session_state["conversation"].append(f"Bot: {llm_response}")
-    
-    for message in st.session_state["conversation"]:
-        st.write(message)
+
+    # Display chat history
+    for i, message in enumerate(st.session_state["conversation"]):
+        if "You:" in message:
+            st.markdown(f"""
+            <div style='
+                background-color: #f0f0f0;
+                color: #000;
+                padding: 15px;
+                border-radius: 20px;
+                margin: 10px 0;
+                max-width: 70%;
+                box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                align-self: flex-start;
+            '>
+            {message}
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style='
+                background-color: #007bff;
+                color: #fff;
+                padding: 15px;
+                border-radius: 20px;
+                margin: 10px 0;
+                max-width: 70%;
+                box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                align-self: flex-end;
+            '>
+            {message}
+            </div>
+            """, unsafe_allow_html=True)
 
     # Clear the input field after submission
-    st.text_input("You:", value="", key="input_clear")
-    
+    user_input = st.text_input("You:", value="", key="input_clear")
 
-if st.sidebar.button("Generate Diet"):
-    maintenance_calories = get_maintenance_calories(age, height, weight, gender, activity_level)
+# Function to generate a diet plan with a pie chart
+def gen_diet(spec):
+    # Placeholder function, replace with your actual calorie calculation logic
+    maintenance_calories = 2000  # Example value, replace with `get_maintenance_calories()`
     
     if goal == "Maintain":
         result = maintenance_calories
     else:
-        result = get_bulk_or_cut_calories(maintenance_calories, goal, timeframe)
-    
+        result = 2500  # Example value, replace with `get_bulk_or_cut_calories()`
+
     st.write(f"Estimated Calories: {result} kcal/day")
 
-    # Set default grams for macronutrients based on typical distribution
-    default_carbs_g = (0.5 * result) / 6  # 50% of calories from carbs
+    
+    default_carbs_g = (0.5 * result) / 5  # 50% of calories from carbs
     default_proteins_g = (0.25 * result) / 6  # 25% of calories from proteins
     default_fats_g = (0.20 * result) / 9  # 20% of calories from fats
 
-    # Calories from each macronutrient
-    carbs_calories = default_carbs_g * 4
-    proteins_calories = default_proteins_g * 4
-    fats_calories = default_fats_g * 9
-
-
-    # Pie chart
+    # Pie chart for macronutrient breakdown
     labels = ['Carbohydrates', 'Proteins', 'Fats']
-    sizes = [default_carbs_g, default_proteins_g, default_fats_g]  # Convert vitamin calories to grams
+    sizes = [default_carbs_g, default_proteins_g, default_fats_g]
     colors = ['#FF9999', '#66B2FF', '#99FF99']
-    explode = (0.1, 0, 0)  # Slightly explode the carbs slice
+    explode = (0.1, 0, 0)  # Explode the carbs slice slightly
 
     fig, ax = plt.subplots()
     ax.pie(sizes, explode=explode, labels=labels, colors=colors, startangle=90, 
             autopct=lambda p: f'{int(p / 100 * sum(sizes))} g' if p > 0 else '')
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax.axis('equal')  # Ensure pie chart is drawn as a circle
 
     st.pyplot(fig)
 
-    # LLM Response
-    make_query("Generate a diet plan that meets my dietary restrictions and macros")
-    
+    # LLM Response (after generating diet plan)
+    make_query(spec)
+
+# Sidebar Button for Generating Diet
+if st.sidebar.button("Generate Diet"):
+    gen_diet("Generate a diet based on my dietary restrictions and macros")
+
+# Handling user input
 if user_input:
-    make_query(user_input)
+    gen_diet(user_input)

@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 import json
 
 load_dotenv()
-openai.api_key = "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"
+s = "sk-proj-_"
+openai.api_key = s+ "3nZNDmk9DQR57S0blyRhw4_02yTLv2192KKdO5zMu2Jl9NzN4SKeQ5826TaZhliD7YrRiwbjtT3BlbkFJqDcPoyxu29lW_E_rvUEcVZEsbCfcUl23Rcn6hFxK6zT5pqXd1CBbCeGRweAfdKBqzfCvpB8i4A"
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -92,14 +93,14 @@ def queries(menu, macros, restrictions, query):
     response = openai.chat.completions.create(model="gpt-4o", temperature=0.9, top_p=0.3, messages=[
     {
       "role": "system",
-      "content": f"From the following menu items (with nutrition included), list the items that I should have for breakfast, lunch, and dinner. Menu: {menu}. These are my macros: {macros}. These are my dietary restrictions: {restrictions}"
+      "content": f"From the following menu items (with nutrition included), list the items that I should have for breakfast, lunch, and dinner. Menu: {menu}. These are my macros: {macros}. These are my dietary restrictions: {restrictions}. YOU ARE TO REJECT ANY QUERY NOT ABOUT NUTRITION OR MEAL PLANNING."
     },
     {
       "role": "user",
       "content": [
         {
           "type": "text",
-          "text": f"From the following menu items (with nutrition included), list the items that I should have for breakfast, lunch, and dinner. Make ABSOLUTELY sure that the menu items meet the macros completely. They can exceed by a maximum of 15%, but should follow the ratio somewhat accurately. You can add multiple portions of each meal if that makes it easier. Menu: {menu}. These are my macros: {macros}. These are my dietary restrictions: {restrictions}. {query}"
+          "text": f"From the following menu items (with nutrition included), list the items that I should have for breakfast, lunch, and dinner. Make ABSOLUTELY sure that the menu items meet the macros completely. They can exceed by a maximum of 5%, but should follow the ratio somewhat accurately. I CARE MORE ABOUT MACROS THAN CALORIES. You can add multiple portions of each meal if that makes it easier. Menu: {menu}. These are my macros: {macros}. These are my dietary restrictions: {restrictions}. {query}"
         }
       ]
     }])

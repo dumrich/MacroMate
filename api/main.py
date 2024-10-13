@@ -119,3 +119,81 @@ def user_query(request: Request):
     restrictions = {}
     
     return {"response": query(menu, macros, restrictions, query)}
+
+@app.get("/foods/{food_id}/allergens")
+def get_food_allergens(food_id: int, db: Session = Depends(get_db)):
+    # Query the Food item with the given food_id
+    food_item = db.query(Food).filter(Food.id == food_id).first()
+    
+    # Check if the food item exists
+    if not food_item:
+        return {"error": "Food item not found"}
+    
+    # Get the allergens associated with the food item
+    allergens = [allergen.name for allergen in food_item.allergens]
+    
+    return {"allergens": allergens}
+
+@app.get("/foods/{food_id}/dietary_restrictions")
+def get_food_dietary_restrictions(food_id: int, db: Session = Depends(get_db)):
+    # Query the Food item with the given food_id
+    food_item = db.query(Food).filter(Food.id == food_id).first()
+    
+    # Check if the food item exists
+    if not food_item:
+        return {"error": "Food item not found"}
+    
+    # Get the dietary_restrictions associated with the food item
+    dietary_restrictions = [dietary_restriction.name for dietary_restriction in food_item.dietary_restrictions]
+    
+    return {"dietary_restrictions": dietary_restrictions}
+
+@app.get('/menus/{menu_id}/foods/json')
+def get_food_menu_JSON(menu_id: int, db: Session = Depends(get_db)):
+    menu = db.query(Menu).filter(Menu.id == menu_id).first()
+
+    # Check if the menu exists
+    if not menu:
+        return {"error": "Menu not found"}
+
+    return menu_as_json(menu)
+
+@app.get('/dining_halls/{dining_hall_id}/menus/json')
+def get_dining_hall_food_menus_JSON(dining_hall_id: int, db: Session = Depends(get_db)):
+    dining_hall = db.query(DiningHall).filter(DiningHall.id == dining_hall_id).first()
+
+    # Check if the menu exists
+    if not dining_hall:
+        return {"error": "Menu not found"}
+    
+    formatted_json = {dining_hall.name: {}}
+
+    for menu in dining_hall.menus:
+        formatted_json[dining_hall.name].update(menu_as_json(menu))
+
+    return formatted_json
+
+#Helper method for converting Menu models into full menu
+def menu_as_json(menu: Menu):
+
+    formatted_json = {menu.menu_type: []}
+
+    for food in menu.foods:
+
+        #Get allergens and dietary restrictions for each good
+        allergens = [allergen.name for allergen in food.allergens]
+        dietary_restrictions = [dietary_restriction.name for dietary_restriction in food.dietary_restrictions]
+
+        food_info = {
+            'name': food.name,
+            'calories': food.calories,
+            'proteins': food.proteins,
+            'fats': food.fats,
+            'sugars': food.sugars,
+            'allergens': allergens,
+            'dietary_restrictions': dietary_restrictions
+        }
+
+        formatted_json[menu.menu_type].append(food_info)
+
+    return formatted_json

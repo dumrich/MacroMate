@@ -2,43 +2,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import requests
 
-API_URL = ""
-
-if "conversation" not in st.session_state:
-    st.session_state["conversation"] = []
-
-for message in st.session_state["conversation"]:
-    st.write(message)
-
-user_input = st.text_input("You:", "")
-
-def query_llm_api(user_input):
-    headers = {
-        "Content-Type": "application/json"
-    }
-    data = {
-        "query": user_input,
-        
-    }
-    
-    try:
-        response = requests.post(API_URL, json=data, headers=headers)
-        response.raise_for_status()  # Raise an error for bad responses
-        return response.json().get("response", "Error: No response received")
-    except requests.exceptions.RequestException as e:
-        return f"Error: {str(e)}"
-if user_input:
-    # Add the user's input to the conversation history
-    st.session_state["conversation"].append(f"You: {user_input}")
-    
-    # Get the LLM's response
-    llm_response = query_llm_api(user_input)
-    
-    # Add the LLM's response to the conversation history
-    st.session_state["conversation"].append(f"Bot: {llm_response}")
-    
-    # Clear the input field after submission
-    st.text_input("You:", value="", key="input_clear")
 
 # Function to calculate maintenance calories with weight in pounds and height in inches
 def get_maintenance_calories(age, height_in_inches, weight_in_pounds, gender, activity_level):
@@ -91,6 +54,26 @@ activity_level = st.sidebar.selectbox("Activity Level", ["Sedentary", "Lightly a
 goal = st.sidebar.selectbox("Goal", ["Maintain", "Bulk", "Cut"])
 timeframe = st.sidebar.selectbox("Timeframe", ["Short (1-2 months)", "Medium (3-5 months)", "Long (6+ months)"])
 
+
+
+def get_nutrients():
+    maintenance_calories = get_maintenance_calories(age, height, weight, gender, activity_level)
+    
+    if goal == "Maintain":
+        result = maintenance_calories
+    else:
+        result = get_bulk_or_cut_calories(maintenance_calories, goal, timeframe)
+    
+    default_carbs_g = (0.5 * result) / 4  # 50% of calories from carbs
+    default_proteins_g = (0.25 * result) / 4  # 25% of calories from proteins
+    default_fats_g = (0.20 * result) / 9  # 20% of calories from fats
+
+    dict = {"carbohydrates": default_carbs_g, "proteins": default_proteins_g, "fats": default_fats_g}
+
+    return dict
+    
+    
+
 # Calculate maintenance calories
 if st.sidebar.button("Calculate Calories"):
     maintenance_calories = get_maintenance_calories(age, height, weight, gender, activity_level)
@@ -129,3 +112,99 @@ if st.sidebar.button("Calculate Calories"):
         ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
         st.pyplot(fig)
+
+
+# Diet
+st.sidebar.title("Dietary Choices :carrot:")
+st.sidebar.header("Meals", divider = "blue")
+breakfast = st.sidebar.checkbox("Breakfast")
+lunch = st.sidebar.checkbox("Lunch")
+dinner = st.sidebar.checkbox("Dinner")
+
+st.sidebar.header("Allergies/Dietary Restrictions", divider="blue")
+# Allergies
+coconut = st.sidebar.checkbox("Coconut")
+dairy = st.sidebar.checkbox("Dairy")
+eggs = st.sidebar.checkbox("Eggs")
+fish = st.sidebar.checkbox("Fish")
+peanuts = st.sidebar.checkbox("Peanuts")
+sesame = st.sidebar.checkbox("Sesame")
+shellfish = st.sidebar.checkbox("Shellfish")
+soy = st.sidebar.checkbox("Soy")
+tree_nuts = st.sidebar.checkbox("Tree Nuts")
+wheat_gluten = st.sidebar.checkbox("Wheat/Gluten")
+
+
+halal_friendly = st.sidebar.checkbox("Halal Friendly")
+gluten_friendly = st.sidebar.checkbox("Gluten Friendly")
+meatless = st.sidebar.checkbox("Meatless")
+contains_pork = st.sidebar.checkbox("Contains Pork")
+vegan = st.sidebar.checkbox("Vegan") 
+
+diningHall = st.sidebar.selectbox("Hall", ["east", "west", "north", "south", "pollock"])
+
+restrictions = {
+    "coconut": coconut,
+    "dairy": dairy,
+    "eggs": eggs,
+    "fish": fish,
+    "peanuts": peanuts,
+    "sesame": sesame,
+    "shellfish": shellfish,
+    "soy": soy,
+    "tree_nuts": tree_nuts,
+    "wheat_gluten": wheat_gluten,
+    "halal_friendly": halal_friendly,
+    "gluten_friendly": gluten_friendly,
+    "meatless": meatless,
+    "contains_pork": contains_pork,
+    "vegan": vegan,
+}
+
+
+
+
+
+#######################################################
+
+
+API_URL = "http://104.39.68.161:8000/query/"
+
+if "conversation" not in st.session_state:
+    st.session_state["conversation"] = []
+
+for message in st.session_state["conversation"]:
+    st.write(message)
+
+user_input = st.text_input("You:", "")
+
+def query_llm_api(user_input):
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "query": user_input,
+        "menu": diningHall,
+        "macros": get_nutrients(),
+        "restrictions": restrictions,
+
+    }
+    
+    try:
+        response = requests.post(API_URL, json=data, headers=headers)
+        response.raise_for_status()  # Raise an error for bad responses
+        return response.json().get("response", "Error: No response received")
+    except requests.exceptions.RequestException as e:
+        return f"Error: {str(e)}"
+if user_input:
+    # Add the user's input to the conversation history
+    st.session_state["conversation"].append(f"You: {user_input}")
+    
+    # Get the LLM's response
+    llm_response = query_llm_api(user_input)
+    
+    # Add the LLM's response to the conversation history
+    st.session_state["conversation"].append(f"Bot: {llm_response}")
+    
+    # Clear the input field after submission
+    st.text_input("You:", value="", key="input_clear")

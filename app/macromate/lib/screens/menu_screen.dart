@@ -8,12 +8,13 @@ class UserInputScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userInputState = Provider.of<UserInputState>(context);
+    var colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adjust Height, Weight & Goals'),
+        title: const Text('Adjust Biometrics and Goals'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to Home Screen
           },
@@ -27,6 +28,7 @@ class UserInputScreen extends StatelessWidget {
             // Age Slider
             Text('Age: ${userInputState.age.toInt()} years old', style: const TextStyle(fontSize: 16)),
             Slider(
+              inactiveColor: colorScheme.secondary,
               value: userInputState.age,
               min: 1, // Minimum age
               max: 99, // Maximum age
@@ -40,6 +42,7 @@ class UserInputScreen extends StatelessWidget {
             // Height Slider
             Text('Height: ${userInputState.height.toInt()} inches', style: const TextStyle(fontSize: 16)),
             Slider(
+              inactiveColor: colorScheme.secondary,
               value: userInputState.height,
               min: 20, // Minimum height in inches
               max: 100, // Maximum height in inches
@@ -55,6 +58,7 @@ class UserInputScreen extends StatelessWidget {
             //Weight Slider
             Text('Weight: ${userInputState.weight.toInt()} pounds', style: const TextStyle(fontSize: 16)),
             Slider(
+              inactiveColor: colorScheme.secondary,
               value: userInputState.weight,
               min: 30, // Minimum height in pounds
               max: 400, // Maximum height in pounds

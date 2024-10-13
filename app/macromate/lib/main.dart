@@ -13,13 +13,41 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => userInputState, // Provide the UserInputState to the widget tree
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
+final blackColorScheme = ColorScheme(
+    brightness: Brightness.dark,
+    primary: Colors.grey.shade600,
+    onPrimary: Colors.white,
+    primaryContainer: Colors.black,
+    secondary: Colors.grey.shade400,
+    onSecondary: Colors.white,
+    secondaryContainer: Colors.grey.shade700,
+    surface: Colors.grey.shade900,
+    onSurface: Colors.white,
+    error: Colors.redAccent,
+    onError: Colors.white,
+  );
+
+final lightColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Colors.grey.shade300,
+  onPrimary: Colors.black,
+  primaryContainer: Colors.white,
+  secondary: Colors.grey.shade500,
+  onSecondary: Colors.black,
+  secondaryContainer: Colors.grey.shade200,
+  surface: Colors.grey.shade800,
+  onSurface: Colors.black,
+  error: Colors.red.shade400,
+  onError: Colors.white,
+);
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -27,7 +55,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
+        colorScheme: blackColorScheme,
         useMaterial3: true,
       ),
       initialRoute: '/',

@@ -107,11 +107,7 @@ def queries(menu, macros, restrictions, query):
 
 @app.post("/query/")
 async def user_query(request: Request):
-<<<<<<< HEAD
     input = await request.json()
-=======
-    data = await request.json()
->>>>>>> 3b04e8e (Finished API)
     
     query = data.get("query")
     menu = data.get("menu_id")

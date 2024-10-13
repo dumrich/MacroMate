@@ -1,7 +1,19 @@
+<<<<<<< HEAD
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models
 from models import SessionLocal, DiningHall, Menu, Food, Allergen, DietaryRestriction
+=======
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+import models
+from models import User, SessionLocal
+import openai
+from dotenv import load_dotenv
+
+load_dotenv()
+openai.api_key = os.getenv('OPEN_AI')
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -13,8 +25,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-#End points
 
 @app.post("/dining_halls/")
 def create_dining_hall(name: str, db: Session = Depends(get_db)):
@@ -83,3 +93,32 @@ def add_dietary_restriction_to_food(food_id: int, dietary_id: int, db: Session =
     food_item.dietary_restrictions.append(dietary_restriction)
     db.commit()
     return {"message": f"Dietary restriction {dietary_restriction.restriction} added to food {food_item.name}"}
+
+def query(menu, macros, restrictions, query):
+    response = openai.chat.completion.create(model="gpt-4o", temperature=0.9, top_p=0.3
+                                          messages=[
+    {
+      "role": "system",
+      "content": f"From the following menu items (with nutrition included), list the items that I should have for breakfast, lunch, and dinner. Menu: {menu}. These are my macros: {macros}. These are my dietary restrictions: {diet}"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": f"{query}"
+        }
+      ]
+    }])
+    return response.choices[0].message.content
+
+@app.post("/query/")
+def user_query(request: Request):
+    input = await request.json()
+    
+    query = data.get("name")
+    menu = data.get("menu_id")
+    macros = {}
+    restrictions = {}
+    
+    return {"response": query(menu, macros, restrictions, query)}

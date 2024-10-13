@@ -1,56 +1,60 @@
 import mechanicalsoup
+import json
+
 browser = mechanicalsoup.StatefulBrowser()
 
 class Food:
     def __init__(self, name, nut_dict):
-        self.entree = name
-        self.nutrition = nut_dict  
-    
+        self._entree = name
+        self._nutrition = nut_dict
+
+    # Getters
+    @property
+    def entree(self):
+        return self._entree
+
+    @property
+    def nutrition(self):
+        return self._nutrition
+
+    # Setters
+    @entree.setter
+    def entree(self, name):
+        if isinstance(name, str):
+            self._entree = name
+        else:
+            raise TypeError("Entree must be a string.")
+
+    @nutrition.setter
+    def nutrition(self, nut_dict):
+        if isinstance(nut_dict, dict):
+            self._nutrition = nut_dict
+        else:
+            raise TypeError("Nutrition must be a dictionary.")
+
     def __str__(self):
-        #Create a string representation of the food item and its nutrition facts
-        nutrition_info = ", ".join([f"{key}: {value}" for key, value in self.nutrition.items()])
-        return f"{self.entree} ({nutrition_info})"
+        # Create a string representation of the food item and its nutrition facts
+        nutrition_info = ", ".join([f"{key}: {value}" for key, value in self._nutrition.items()])
+        return f"{self._entree} ({nutrition_info})"
     
     __repr__ = __str__
 
 
 class Menu:
-    def __init__(self, breakfast=None, lunch=None, dinner=None):
-        self.breakfast = breakfast if breakfast else []
-        self.lunch = lunch if lunch else []
-        self.dinner = dinner if dinner else []
+    def __init__(self, name):
+        self.menus = []
+        self.name = "".join(name.split(" "))
+
+    def add_menu(self, menu):
+        self.menus.append(menu)
+
 
     def __str__(self):
-        #Create a string representation of the menu
-        breakfast_items = "\n".join([str(food) for food in self.breakfast])
-        lunch_items = "\n".join([str(food) for food in self.lunch])
-        dinner_items = "\n".join([str(food) for food in self.dinner])
-        return (f"Breakfast:\n{breakfast_items}\n\n"
-                f"Lunch:\n{lunch_items}\n\n"
-                f"Dinner:\n{dinner_items}")
+        return (f"Breakfast: {self.menus[0]}"
+                f"Lunch: {self.menus[1]}"
+                f"Dinner: {self.menus[2]}")
         
     __repr__ = __str__
-
-
-class DiningHall(Menu):
-    def __init__(self, name, breakfast=None, lunch=None, dinner=None):
-        super().__init__(breakfast, lunch, dinner)
-        self.name = name  # Store the name of the dining hall
-    
-    def __str__(self):
-        # Create a string representation of the dining hall and its menu
-        return f"{self.name} Dining Hall:\n{super().__str__()}"
-
-
-# menu
-#   B L D
-# dinning hall
-#   one of the dining halls with each breakfast lunch and dinner
-# food 
-    #nutrition 
-
-
-
 
 
 #Gets nutriton of every food item 
@@ -110,11 +114,11 @@ def get_menu_links():
     main_page = browser.open(url)
 
     # List of form options
-    dining_halls = {"East Food District Findlay": "11",
-                    "North Food District Warnock": "17",
-                    "South Food District Redifer": "13",
-                    "West Food District Waring": "16",
-                    "Pollock Dining Commons": "14"}
+    dining_halls = {"east": "11",
+                    "north": "17",
+                    "south": "13",
+                    "north": "16",
+                    "pollock": "14"}
 
     meals = ["Breakfast", "Lunch", "Dinner"]
 
@@ -126,6 +130,7 @@ def get_menu_links():
 
         response = browser.submit_selected()
 
+        response_data[hall] = [] 
         for meal in meals:
             browser.select_form('#frmMenuFilters')
             browser["selMeal"] = meal 
@@ -133,7 +138,6 @@ def get_menu_links():
             response = browser.submit_selected()
             soup = response.soup
 
-            response_data[hall] = [] 
             response_data[hall].append(soup)
             
     return response_data
@@ -164,25 +168,33 @@ def get_food_links(page):
                 "indicators": indicator_labels
             })            
             
-            return food_items
+    return food_items
             # return (f"Menu Item: {item_text} \n   Indicators: {', '.join(indicator_labels)} \n   URL: {item_href}")
         
         
-verbose=True
-
 def main():
     # Get menu links
     menus = get_menu_links()
-
+    
+    overall = []
     for hall, pages in menus.items():
-        for page in pages:
+        m = Menu(hall)
+        
+        for i, page in enumerate(pages):
             food_links = get_food_links(page)
-            
+            foods = {}
+           
             for food in food_links:
                 nut_data = nutrition(food["url"])  # Call nutrition function for each food item
                 food_item = Food(food["name"], nut_data)
-                print(food_item)  # Print or store the Food object as needed
+                foods[food["name"]] = food_item
 
-main()
+            m.add_menu(foods)
+        overall.append(m)
+    return overall
 
-verbose = True
+
+data = main()
+for d in data:
+    with open(d.name, "w") as json_file:
+        json.dump(str(d), json_file, indent=4)

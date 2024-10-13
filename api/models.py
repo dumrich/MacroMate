@@ -47,7 +47,7 @@ class Menu(Base):
     dining_hall_id = Column(Integer, ForeignKey('dining_halls.id'))
 
     dining_hall = relationship("DiningHall", back_populates="menus")
-    foods = relationship("Food", back_populates="menu")
+    foods = relationship("Food", back_populates="menu", cascade="all, delete-orphan")
 
 class Food(Base):
     __tablename__ = 'foods'
@@ -59,8 +59,8 @@ class Food(Base):
     fats = Column(Float)
     sugars = Column(Float)
 
-    allergens = relationship("Allergen", secondary=food_allergen_association, back_populates="foods")
-    dietary_restrictions = relationship('DietaryRestriction', secondary=food_dietary_association, back_populates="foods")
+    allergens = relationship("Allergen", secondary=food_allergen_association, back_populates="foods", cascade="all, delete")
+    dietary_restrictions = relationship('DietaryRestriction', secondary=food_dietary_association, back_populates="foods", cascade="all, delete")
 
     menu_id = Column(Integer, ForeignKey('menus.id'))
     

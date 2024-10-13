@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MacroMate</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" >
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="./assets/css/style.css"> 
+
+</head>
+
+<body>
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+      <a href="#" class="logo">
+        <img src="./assets/images/newmacrologo.png" width="150px" height="100px" alt="Macro Logo">
+      </a>
+
+      <nav class="navbar" data-navbar>
+
+        <div class="navbar-top">
+          <a href="#" class="logo">
+            <img src="./assets/images/logo-light.svg" width="64" height="24">
+          </a>
+        </div>
+
+        <ul class="navbar-list">
+          <li>
+            <a href="#" class="navbar-link" style = "color:white ">Home</a>
+          </li>
+          
+          <li>
+            <a href="http://104.39.68.161:8501/" target = "_blank" class="navbar-link" style = "color:white ">Chatbot</a>
+          </li>
+
+          <li>
+            <a href="#about" class="navbar-link" style = "color:white ">About</a>
+          </li>
+
+          <li>
+            <a href="#events" class="navbar-link" style = "color:white ">Events</a>
+          </li>
+
+          <li>
+            <a href="#contact" class="navbar-link" style = "color:white ">Contact</a>
+          </li>
+
+        </ul>
+
+        <a href="https://hackpsu.org/"target="_blank" class="logo">
+          <img src = "assets/images/lol.png" style = "width:50px;height:50px">
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article>
+
+      <!-- 
+        - #HERO
+      -->
+      <section class="section hero" aria-label="home" style = " overflow-x: hidden">
+        <div class="container">
+          
+          <img src="assets/images/appleplate.png" style = "position:relative;left:50px;width:560px; height:540px" class="w-100 banner-img"
+            data-reveal="top">
+       
+
+          <div class="hero-content">
+            <img src = "assets/images/newmacrologo.png" style = "width:500px;height:150px;position: relative;right:20px;top:80px;">
+            <br>
+            <br>
+            <br>
+            <h1 class="h1 hero-title hero-subtitle" style = "position:relative;right:70px;"data-reveal="top" data-reveal-delay="0.5s">
+                Count your Macros
+                at Penn State!
+                <br>
+            </h1>
+            <div class="btn-wrapper" data-reveal="top" data-reveal-delay="1s" style="position: relative;left:170px;">
+              <a href="http://104.39.68.161:8501/" target = "_blank" class="btn btn-primary" style = "position:relative;right:70px;">Get Started!</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 
+        - #ABOUT
+      -->
+
+      <section class="section about" section id="about" aria-label="about">
+        <div class="container">
+          <div class="wrapper">
+            <div data-reveal="left">
+              <h2 class="h2 section-title">What We Do?</h2>
+              <p class="section-text">      
+Welcome to MacroMate, your go-to app for tracking the nutritional content of meals at all dining halls and restaurants on campus. Whether you're managing macros for fitness, navigating dietary restrictions, or seeking healthier options, MacroMate provides real-time menu updates and detailed nutrition info, including calories, protein, carbs, and fats. Filter meals by dietary preferences or build custom ones to meet your goals. Our mission is to help you stay on track while enjoying the variety of campus dining options.
+              </p>
+            </div>
+            <ul class="progress-list" data-reveal="right">
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p>Calories</p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 70%; background-color: #c7b1dd"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p>Total Fat. </p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 50%; background-color: #8caeec"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p>Trans Fat</p>  
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 80%; background-color: #b0d4c1"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p> Cholestral </p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 20%; background-color: #e3a6b6"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p> Sodium </p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 30%; background-color: #a9cd6c"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p> Sugars </p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 75%; background-color: #ac6795"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p> Fiber </p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 35%; background-color: #dce3a6"></div>
+                </div>
+              </li>
+
+              <li class="progress-item">
+                <div class="label-wrapper">
+                  <p> Protein </p>
+                </div>
+                <div class="progress">
+                  <div class="progress-fill" style="width: 13%; background-color: #ab8d64"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <ul class="grid-list">
+            <li data-reveal="bottom">
+              <div class="about-card">
+                <div class="card-icon">
+                  <img src="./assets/images/icon-1.svg" width="52" height="52" loading="lazy" alt="web design icon">
+                </div>
+                <h3 class="h4 card-title">Calorie Tracking</h3>
+                <p class="card-text">
+                  We help you to track the precice number of calories.
+                </p>
+              </div>
+            </li>
+
+            <li data-reveal="bottom" data-reveal-delay="0.25s">
+              <div class="about-card">
+                <div class="card-icon">
+                  <img src="./assets/images/icon-2.svg" width="52" height="52" loading="lazy" alt="mobile design icon">
+                </div>
+                <h3 class="h4 card-title">Custom Plans</h3>
+                <p class="card-text">
+                    Customised personal plans only for you.
+                </p>
+              </div>
+            </li>
+
+            <li data-reveal="bottom" data-reveal-delay="0.5s">
+              <div class="about-card">
+                <div class="card-icon">
+                  <img src="./assets/images/icon-3.svg" width="52" height="52" loading="lazy"
+                    alt="web development icon">
+                </div>
+                <h3 class="h4 card-title">Log activities</h3>
+                <p class="card-text">
+                  Keep track of everything.
+                </p>
+              </div>
+            </li>
+
+            <li data-reveal="bottom" data-reveal-delay="0.75s">
+              <div class="about-card">
+                <div class="card-icon">
+                  <img src="./assets/images/icon-4.svg" width="52" height="52" loading="lazy" alt="web seo icon">
+                </div>
+                <h3 class="h4 card-title">Insights for your goals</h3>
+                <p class="card-text">
+                  Expert team for guidance at each and every step.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 
+        - #PROJECT
+      -->
+
+      <section class="section project" section id = "events"aria-labelledby="project-label">
+        <div class="container">
+          <div class="title-wrapper" data-reveal="top">
+            <div>
+              <h2 class="h2 section-title" id="project-label">Events</h2>
+              <p class="section-text">
+                Check out some of Penn State's latest fitness events.
+              </p>
+            </div>
+            <a href="https://orgcentral.psu.edu/events?themes=Athletics" target="_blank" class="btn btn-secondary">See all Programs</a>
+          </div>
+
+          <ul class="grid-list">
+            <li>
+              <div class="project-card project-card-1" style="background-color: #f1f5fd">
+                <div class="card-content" data-reveal="left">
+                  <h3 class="h3 card-title">Ice Cream Mile</h3>
+                  <p class="card-text">
+                    Penn State Campus Recreation Competitive and Intramural Sports and Fitness and Wellbeing will be hosting the Campus Recreation Ice Cream Mile to celebrate Penn State and the University community on Saturday, October 12 at 12:00 p.m.
+
+Run a lap, eat a cup of ice cream - and repeat for laps 1,2,3 (1 mile). Time is total time – run time and ice cream consumption time. No high-tech chip-timing here. One person with a stopwatch and one with a tablet and a pen.
+
+The event will be open to the first 250 Penn State University Park students to register. First 125 are guaranteed T-shirts!
+                  </p>
+                  <a href="#" class="btn-text" style="color: #a07cc5">
+                    <a href="https://orgcentral.psu.edu/event/10538324" target="_blank" class="span">See More Info</a>
+                    <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                  </a>
+                </div>
+
+                <figure class="card-banner" data-reveal="right" style="height: 50%; width: 50%" >
+                  <img src="assets/images/iceCream.png"  loading="lazy" alt="Web Design"
+                    class="w-100" style="position: relative; margin-left: 120px; bottom:100px;" >
+                </figure> 
+              </div>
+            </li>
+
+            <li>
+              <div class="project-card project-card-1" style="background-color: #f8f5fb">
+                <div class="card-content" data-reveal="left">
+                  <h3 class="h3 card-title">Bachata Lessons with the Social Dance Club</h3>
+                  <p class="card-text">
+                    Join the Social Dance Club for free Bachata Lessons on Thursdays from 6-8:30 pm in the Municipal Building, room 201!
+                  </p>
+                  
+                  <a href="#" class="btn-text" style="color: #3f78e0">
+                    <a href="https://orgcentral.psu.edu/event/10364444" target="_blank" class="span">See More Info</a>
+                    <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                  </a>
+                </div>
+
+                <figure class="card-banner" data-reveal="right" style="height: 50%; width: 50%" >
+                  <img src="assets/images/dancing.png"  loading="lazy" alt="Web Design"
+                    class="w-100" style="position: relative; margin-left: 120px;bottom:30px;" >
+                </figure> 
+              </div>
+            </li>
+
+            <li>
+              <div class="project-card project-card-2" style="background-color: #f1f5fd" style = "width:1000px;">
+                <div class="card-content" data-reveal="right">
+                  <p class=" card-tag" style="color: #3f78e0">Fitness Design model</p>
+                  <h3 class="h3 card-title">Diet Suggestions</h3>
+                  <p class="card-text">
+                    A healthy breakfast is great for the brain and the belly. Make your morning routine a breeze by preparing a few nutritious staples ahead of time, like hearty oatmeal cups, simple egg dishes and grab-and-go bars.
+                  </p>
+                  <a href="#" class="btn-text" style="color: #3f78e0">
+                    <span class="span">See More</span>
+                    <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                  </a>
+                </div>
+
+                <figure class="card-banner" data-reveal="left" >
+                  <img style="height: 40rem; width: 40rem; position: relative; margin-left: 10rem" src="https://png.pngtree.com/png-clipart/20221014/ourmid/pngtree-girls-diet-plan-weight-loss-plan-table-png-image_6150708.png" width="600" height="367" loading="lazy" alt="Web Design"
+                    class="w-100">
+                </figure>
+              </div>
+            </li>
+    
+
+            <li>
+              <div class="project-card project-card-4" style="background-color: #fcf4f6;height:588px;">
+                <div class="card-content" data-reveal="left">
+                  <p class=" card-tag" style="color: #d16b86">Use of App</p>
+                  <h3 class="h3 card-title">Track Calories</h3>
+                  <p class="card-text">
+                    Tracking calories is a tested method of weight loss.
+                    It helps in understanding the eating patterns and habits of an individual, making it easier to monitor diet behaviors.
+                  </p>
+                  <a href="#" class="btn-text" style="color: #d16b86">
+                    <span class="span">Track your calories now</span>
+                    <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 
+        - #CONTACT
+      -->
+
+      <section class="section contact" section id = "contact" aria-label="contact">
+        <div class="container">
+          <div class="contact-card">
+            <div class="contact-content" data-reveal="left">
+              <div class="card-icon">
+                <img src="./assets/images/icon-5.svg" width="44" height="44" loading="lazy" alt="envelop icon">
+              </div>
+              <h2 class="h2 section-title">If you have any questions, drop us a message!</h2>
+            </div>
+
+            <form id="fs-frm" name="simple-contact-form" accept-charset="utf-8" action="https://formspree.io/f/mdkooaol" method="post" style = "border:none">
+              <fieldset id="fs-frm-inputs">
+                <label for="full-name" style="font-size:20px;">Full Name</label>
+                <input type="text" name="name" id="full-name" placeholder="First and Last" required="">
+                <label for="email-address" style="font-size:20px;">Email Address</label>
+                <input type="email" name="_replyto" id="email-address" placeholder="email@domain.tld" required="">
+                <label for="message" style="font-size:20px;">Message</label>
+                <textarea rows="5" name="message" id="message" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." required=""></textarea>
+                <input type="hidden" name="_subject" id="email-subject" value="Contact Form Submission">
+              </fieldset>
+              <input type="submit" value="Submit">
+            </form>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+    <div class="container">
+      <p class="copyright">
+        © 2024 All rights reserved.
+      </p>
+      <p style = "position:relative;right:40px">Made with love at Happy Valley &hearts;
+      </p>
+      <a href="https://hackpsu.org/"target="_blank" class="logo">
+        <img src = "assets/images/lol.png" style = "width:50px;height:50px">
+      </a>
+    </div>
+  </footer>
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="./assets/js/script.js"></script>
+
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Start of HubSpot Embed Code -->
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js-na1.hs-scripts.com/47700578.js"></script>
+<!-- End of HubSpot Embed Code -->
+</body>
+</html>

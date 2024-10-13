@@ -169,7 +169,7 @@ def get_food_dietary_restrictions(food_id: int, db: Session = Depends(get_db)):
         return {"error": "Food item not found"}
     
     # Get the dietary_restrictions associated with the food item
-    dietary_restrictions = [dietary_restriction.name for dietary_restriction in food_item.dietary_restrictions]
+    dietary_restrictions = [dietary_restriction.restriction for dietary_restriction in food_item.dietary_restrictions]
     
     return {"dietary_restrictions": dietary_restrictions}
 
@@ -207,7 +207,7 @@ def menu_as_json(menu: Menu):
 
         #Get allergens and dietary restrictions for each good
         allergens = [allergen.name for allergen in food.allergens]
-        dietary_restrictions = [dietary_restriction.name for dietary_restriction in food.dietary_restrictions]
+        dietary_restrictions = [dietary_restriction.restriction for dietary_restriction in food.dietary_restrictions]
 
         food_info = {
             'name': food.name,

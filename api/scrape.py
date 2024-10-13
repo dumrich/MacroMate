@@ -117,7 +117,7 @@ def get_menu_links():
     dining_halls = {"east": "11",
                     "north": "17",
                     "south": "13",
-                    "north": "16",
+                    "west": "16",
                     "pollock": "14"}
 
     meals = ["Breakfast", "Lunch", "Dinner"]

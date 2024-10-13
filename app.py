@@ -64,8 +64,8 @@ def get_nutrients():
     else:
         result = get_bulk_or_cut_calories(maintenance_calories, goal, timeframe)
     
-    default_carbs_g = (0.5 * result) / 4  # 50% of calories from carbs
-    default_proteins_g = (0.25 * result) / 4  # 25% of calories from proteins
+    default_carbs_g = (0.5 * result) / 5  # 50% of calories from carbs
+    default_proteins_g = (0.25 * result) / 6  # 25% of calories from proteins
     default_fats_g = (0.20 * result) / 9  # 20% of calories from fats
 
     dict = {"carbohydrates": default_carbs_g, "proteins": default_proteins_g, "fats": default_fats_g}
@@ -75,43 +75,6 @@ def get_nutrients():
     
 
 # Calculate maintenance calories
-if st.sidebar.button("Calculate Calories"):
-    maintenance_calories = get_maintenance_calories(age, height, weight, gender, activity_level)
-    
-    if goal == "Maintain":
-        result = maintenance_calories
-    else:
-        result = get_bulk_or_cut_calories(maintenance_calories, goal, timeframe)
-    
-    st.write(f"Estimated Calories: {result} kcal/day")
-
-    # Set default grams for macronutrients based on typical distribution
-    default_carbs_g = (0.5 * result) / 4  # 50% of calories from carbs
-    default_proteins_g = (0.25 * result) / 4  # 25% of calories from proteins
-    default_fats_g = (0.20 * result) / 9  # 20% of calories from fats
-
-    # Calories from each macronutrient
-    carbs_calories = default_carbs_g * 4
-    proteins_calories = default_proteins_g * 4
-    fats_calories = default_fats_g * 9
-    vitamins_calories = result - (carbs_calories + proteins_calories + fats_calories)
-
-    # Check if total calories are exceeded
-    if vitamins_calories < 0:
-        st.error("The total calorie intake from macronutrients exceeds the calculated total calories.")
-    else:
-        # Pie chart
-        labels = ['Carbohydrates', 'Proteins', 'Fats', 'Vitamins/Minerals']
-        sizes = [default_carbs_g, default_proteins_g, default_fats_g, vitamins_calories / 4]  # Convert vitamin calories to grams
-        colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99']
-        explode = (0.1, 0, 0, 0)  # Slightly explode the carbs slice
-
-        fig, ax = plt.subplots()
-        ax.pie(sizes, explode=explode, labels=labels, colors=colors, startangle=90, 
-               autopct=lambda p: f'{int(p / 100 * sum(sizes))} g' if p > 0 else '')
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-        st.pyplot(fig)
 
 
 # Diet
@@ -170,11 +133,6 @@ restrictions = {
 
 API_URL = "http://104.39.68.161:8000/query/"
 
-if "conversation" not in st.session_state:
-    st.session_state["conversation"] = []
-
-for message in st.session_state["conversation"]:
-    st.write(message)
 
 user_input = st.text_input("You:", "")
 
@@ -184,11 +142,12 @@ def query_llm_api(user_input):
     }
     data = {
         "query": user_input,
-        "menu": diningHall,
+        "menu_id": diningHall,
         "macros": get_nutrients(),
         "restrictions": restrictions,
 
     }
+    print(data)
     
     try:
         response = requests.post(API_URL, json=data, headers=headers)
@@ -196,15 +155,62 @@ def query_llm_api(user_input):
         return response.json().get("response", "Error: No response received")
     except requests.exceptions.RequestException as e:
         return f"Error: {str(e)}"
-if user_input:
-    # Add the user's input to the conversation history
-    st.session_state["conversation"].append(f"You: {user_input}")
+
+def make_query(query):
     
-    # Get the LLM's response
-    llm_response = query_llm_api(user_input)
+    # Check if total calories are exceeded
+    if "conversation" not in st.session_state:
+        st.session_state["conversation"] = []
+        
+    # LLM Response
+    llm_response = query_llm_api(query)
     
     # Add the LLM's response to the conversation history
     st.session_state["conversation"].append(f"Bot: {llm_response}")
     
+    for message in st.session_state["conversation"]:
+        st.write(message)
+
     # Clear the input field after submission
     st.text_input("You:", value="", key="input_clear")
+    
+
+if st.sidebar.button("Generate Diet"):
+    maintenance_calories = get_maintenance_calories(age, height, weight, gender, activity_level)
+    
+    if goal == "Maintain":
+        result = maintenance_calories
+    else:
+        result = get_bulk_or_cut_calories(maintenance_calories, goal, timeframe)
+    
+    st.write(f"Estimated Calories: {result} kcal/day")
+
+    # Set default grams for macronutrients based on typical distribution
+    default_carbs_g = (0.5 * result) / 6  # 50% of calories from carbs
+    default_proteins_g = (0.25 * result) / 6  # 25% of calories from proteins
+    default_fats_g = (0.20 * result) / 9  # 20% of calories from fats
+
+    # Calories from each macronutrient
+    carbs_calories = default_carbs_g * 4
+    proteins_calories = default_proteins_g * 4
+    fats_calories = default_fats_g * 9
+
+
+    # Pie chart
+    labels = ['Carbohydrates', 'Proteins', 'Fats']
+    sizes = [default_carbs_g, default_proteins_g, default_fats_g]  # Convert vitamin calories to grams
+    colors = ['#FF9999', '#66B2FF', '#99FF99']
+    explode = (0.1, 0, 0)  # Slightly explode the carbs slice
+
+    fig, ax = plt.subplots()
+    ax.pie(sizes, explode=explode, labels=labels, colors=colors, startangle=90, 
+            autopct=lambda p: f'{int(p / 100 * sum(sizes))} g' if p > 0 else '')
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    st.pyplot(fig)
+
+    # LLM Response
+    make_query("Generate a diet plan that meets my dietary restrictions and macros")
+    
+if user_input:
+    make_query(user_input)

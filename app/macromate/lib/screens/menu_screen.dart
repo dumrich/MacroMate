@@ -201,6 +201,38 @@ class UserInputScreen extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('Dining Hall:', style: TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  flex: 6,
+                  child: DropdownButton<String>(
+                    value: userInputState.selectedMenu,
+                    items: userInputState.menus.map((String menu) {
+                      return DropdownMenuItem<String>(
+                        value: menu,
+                        child: Text(menu),
+                      );
+                    }).toList(),
+                    onChanged: (String? menu) {
+                      userInputState.setMenu(menu!);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

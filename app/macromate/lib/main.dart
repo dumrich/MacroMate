@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const ChatbotScreen(),
+        '/': (context) => ChatbotScreen(),
         '/user_input': (context) => const UserInputScreen(),
       },
     );

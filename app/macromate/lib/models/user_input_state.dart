@@ -108,7 +108,7 @@ class UserInputState extends ChangeNotifier {
   }
 
   // Function to calculate macronutrient distribution based on calories
-  Map<String, double> calculateMacronutrients() {
+  Map<String, String> calculateMacronutrients() {
     double totalCalories = calculateCalories();
 
     // Calculate macronutrients
@@ -117,10 +117,11 @@ class UserInputState extends ChangeNotifier {
     double fatGrams = (totalCalories * 0.3) / 9;     // Fat: 30% of calories, 9 calories per gram
 
     return {
-      'calories': totalCalories,
-      'carbohydrates': carbsGrams,
-      'proteins': proteinGrams,
-      'fats': fatGrams,
+      'calories': totalCalories.toString(),
+      'carbohydrates': carbsGrams.toString(),
+      'proteins': proteinGrams.toString(),
+      'fats': fatGrams.toString(),
+      'menu_id': selectedMenu
     };
   }
 }
